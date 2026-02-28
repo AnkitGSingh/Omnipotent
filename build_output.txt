@@ -1,0 +1,107 @@
+
+> omnichat-app@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (189kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+Failed to compile.
+
+./node_modules/@aws-sdk/credential-provider-process/dist-es/resolveProcessCredentials.js:3:1
+Module not found: Can't resolve 'child_process'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./node_modules/@aws-sdk/credential-provider-process/dist-es/fromProcess.js
+./node_modules/@aws-sdk/credential-provider-process/dist-es/index.js
+./node_modules/@aws-sdk/credential-provider-node/dist-es/defaultProvider.js
+./node_modules/@aws-sdk/credential-provider-node/dist-es/index.js
+./node_modules/@langchain/aws/dist/chat_models.js
+./node_modules/@langchain/aws/dist/index.js
+./src/lib/llm.ts
+./src/app/api/chat/route.ts
+./node_modules/next/dist/build/webpack/loaders/next-edge-app-route-loader/index.js?absolutePagePath=private-next-app-dir%2Fapi%2Fchat%2Froute.ts&page=%2Fapi%2Fchat%2Froute&appDirLoader=bmV4dC1hcHAtbG9hZGVyP25hbWU9YXBwJTJGYXBpJTJGY2hhdCUyRnJvdXRlJnBhZ2U9JTJGYXBpJTJGY2hhdCUyRnJvdXRlJnBhZ2VQYXRoPXByaXZhdGUtbmV4dC1hcHAtZGlyJTJGYXBpJTJGY2hhdCUyRnJvdXRlLnRzJmFwcERpcj1EJTNBJTVDT2ZmaWNlX1dvcmslNUNQcm9qZWN0X0thYm9vbSU1Q29tbmljaGF0LWFwcCU1Q3NyYyU1Q2FwcCZhcHBQYXRocz0lMkZhcGklMkZjaGF0JTJGcm91dGUmcGFnZUV4dGVuc2lvbnM9dHN4JnBhZ2VFeHRlbnNpb25zPXRzJnBhZ2VFeHRlbnNpb25zPWpzeCZwYWdlRXh0ZW5zaW9ucz1qcyZiYXNlUGF0aD0mYXNzZXRQcmVmaXg9Jm5leHRDb25maWdPdXRwdXQ9JnByZWZlcnJlZFJlZ2lvbj0mbWlkZGxld2FyZUNvbmZpZz1lMzAlM0Qh&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!
+
+./node_modules/@aws-sdk/token-providers/dist-es/writeSSOTokenToFile.js:2:1
+Module not found: Can't resolve 'fs'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./node_modules/@aws-sdk/token-providers/dist-es/fromSso.js
+./node_modules/@aws-sdk/token-providers/dist-es/index.js
+./node_modules/@aws-sdk/credential-provider-sso/dist-es/resolveSSOCredentials.js
+./node_modules/@aws-sdk/credential-provider-sso/dist-es/fromSSO.js
+./node_modules/@aws-sdk/credential-provider-sso/dist-es/index.js
+./node_modules/@aws-sdk/credential-provider-node/dist-es/defaultProvider.js
+./node_modules/@aws-sdk/credential-provider-node/dist-es/index.js
+./node_modules/@langchain/aws/dist/chat_models.js
+./node_modules/@langchain/aws/dist/index.js
+./src/lib/llm.ts
+./src/app/api/chat/route.ts
+./node_modules/next/dist/build/webpack/loaders/next-edge-app-route-loader/index.js?absolutePagePath=private-next-app-dir%2Fapi%2Fchat%2Froute.ts&page=%2Fapi%2Fchat%2Froute&appDirLoader=bmV4dC1hcHAtbG9hZGVyP25hbWU9YXBwJTJGYXBpJTJGY2hhdCUyRnJvdXRlJnBhZ2U9JTJGYXBpJTJGY2hhdCUyRnJvdXRlJnBhZ2VQYXRoPXByaXZhdGUtbmV4dC1hcHAtZGlyJTJGYXBpJTJGY2hhdCUyRnJvdXRlLnRzJmFwcERpcj1EJTNBJTVDT2ZmaWNlX1dvcmslNUNQcm9qZWN0X0thYm9vbSU1Q29tbmljaGF0LWFwcCU1Q3NyYyU1Q2FwcCZhcHBQYXRocz0lMkZhcGklMkZjaGF0JTJGcm91dGUmcGFnZUV4dGVuc2lvbnM9dHN4JnBhZ2VFeHRlbnNpb25zPXRzJnBhZ2VFeHRlbnNpb25zPWpzeCZwYWdlRXh0ZW5zaW9ucz1qcyZiYXNlUGF0aD0mYXNzZXRQcmVmaXg9Jm5leHRDb25maWdPdXRwdXQ9JnByZWZlcnJlZFJlZ2lvbj0mbWlkZGxld2FyZUNvbmZpZz1lMzAlM0Qh&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!
+
+./node_modules/@aws-sdk/util-user-agent-node/dist-es/defaultUserAgent.js:1:1
+Module not found: Can't resolve 'os'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./node_modules/@aws-sdk/util-user-agent-node/dist-es/index.js
+./node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso/runtimeConfig.js
+./node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso/SSOClient.js
+./node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso/index.js
+./node_modules/@aws-sdk/credential-provider-sso/dist-es/loadSso.js
+./node_modules/@aws-sdk/credential-provider-sso/dist-es/resolveSSOCredentials.js
+./node_modules/@aws-sdk/credential-provider-sso/dist-es/fromSSO.js
+./node_modules/@aws-sdk/credential-provider-sso/dist-es/index.js
+./node_modules/@aws-sdk/credential-provider-node/dist-es/defaultProvider.js
+./node_modules/@aws-sdk/credential-provider-node/dist-es/index.js
+./node_modules/@langchain/aws/dist/chat_models.js
+./node_modules/@langchain/aws/dist/index.js
+./src/lib/llm.ts
+./src/app/api/chat/route.ts
+./node_modules/next/dist/build/webpack/loaders/next-edge-app-route-loader/index.js?absolutePagePath=private-next-app-dir%2Fapi%2Fchat%2Froute.ts&page=%2Fapi%2Fchat%2Froute&appDirLoader=bmV4dC1hcHAtbG9hZGVyP25hbWU9YXBwJTJGYXBpJTJGY2hhdCUyRnJvdXRlJnBhZ2U9JTJGYXBpJTJGY2hhdCUyRnJvdXRlJnBhZ2VQYXRoPXByaXZhdGUtbmV4dC1hcHAtZGlyJTJGYXBpJTJGY2hhdCUyRnJvdXRlLnRzJmFwcERpcj1EJTNBJTVDT2ZmaWNlX1dvcmslNUNQcm9qZWN0X0thYm9vbSU1Q29tbmljaGF0LWFwcCU1Q3NyYyU1Q2FwcCZhcHBQYXRocz0lMkZhcGklMkZjaGF0JTJGcm91dGUmcGFnZUV4dGVuc2lvbnM9dHN4JnBhZ2VFeHRlbnNpb25zPXRzJnBhZ2VFeHRlbnNpb25zPWpzeCZwYWdlRXh0ZW5zaW9ucz1qcyZiYXNlUGF0aD0mYXNzZXRQcmVmaXg9Jm5leHRDb25maWdPdXRwdXQ9JnByZWZlcnJlZFJlZ2lvbj0mbWlkZGxld2FyZUNvbmZpZz1lMzAlM0Qh&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!
+
+./node_modules/@smithy/credential-provider-imds/dist-es/remoteProvider/httpRequest.js:3:1
+Module not found: Can't resolve 'http'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./node_modules/@smithy/credential-provider-imds/dist-es/index.js
+./node_modules/@aws-sdk/credential-provider-node/dist-es/remoteProvider.js
+./node_modules/@aws-sdk/credential-provider-node/dist-es/defaultProvider.js
+./node_modules/@aws-sdk/credential-provider-node/dist-es/index.js
+./node_modules/@langchain/aws/dist/chat_models.js
+./node_modules/@langchain/aws/dist/index.js
+./src/lib/llm.ts
+./src/app/api/chat/route.ts
+./node_modules/next/dist/build/webpack/loaders/next-edge-app-route-loader/index.js?absolutePagePath=private-next-app-dir%2Fapi%2Fchat%2Froute.ts&page=%2Fapi%2Fchat%2Froute&appDirLoader=bmV4dC1hcHAtbG9hZGVyP25hbWU9YXBwJTJGYXBpJTJGY2hhdCUyRnJvdXRlJnBhZ2U9JTJGYXBpJTJGY2hhdCUyRnJvdXRlJnBhZ2VQYXRoPXByaXZhdGUtbmV4dC1hcHAtZGlyJTJGYXBpJTJGY2hhdCUyRnJvdXRlLnRzJmFwcERpcj1EJTNBJTVDT2ZmaWNlX1dvcmslNUNQcm9qZWN0X0thYm9vbSU1Q29tbmljaGF0LWFwcCU1Q3NyYyU1Q2FwcCZhcHBQYXRocz0lMkZhcGklMkZjaGF0JTJGcm91dGUmcGFnZUV4dGVuc2lvbnM9dHN4JnBhZ2VFeHRlbnNpb25zPXRzJnBhZ2VFeHRlbnNpb25zPWpzeCZwYWdlRXh0ZW5zaW9ucz1qcyZiYXNlUGF0aD0mYXNzZXRQcmVmaXg9Jm5leHRDb25maWdPdXRwdXQ9JnByZWZlcnJlZFJlZ2lvbj0mbWlkZGxld2FyZUNvbmZpZz1lMzAlM0Qh&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!
+
+./node_modules/@smithy/hash-node/dist-es/index.js:4:1
+Module not found: Can't resolve 'crypto'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso/runtimeConfig.js
+./node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso/SSOClient.js
+./node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso/index.js
+./node_modules/@aws-sdk/credential-provider-sso/dist-es/loadSso.js
+./node_modules/@aws-sdk/credential-provider-sso/dist-es/resolveSSOCredentials.js
+./node_modules/@aws-sdk/credential-provider-sso/dist-es/fromSSO.js
+./node_modules/@aws-sdk/credential-provider-sso/dist-es/index.js
+./node_modules/@aws-sdk/credential-provider-node/dist-es/defaultProvider.js
+./node_modules/@aws-sdk/credential-provider-node/dist-es/index.js
+./node_modules/@langchain/aws/dist/chat_models.js
+./node_modules/@langchain/aws/dist/index.js
+./src/lib/llm.ts
+./src/app/api/chat/route.ts
+./node_modules/next/dist/build/webpack/loaders/next-edge-app-route-loader/index.js?absolutePagePath=private-next-app-dir%2Fapi%2Fchat%2Froute.ts&page=%2Fapi%2Fchat%2Froute&appDirLoader=bmV4dC1hcHAtbG9hZGVyP25hbWU9YXBwJTJGYXBpJTJGY2hhdCUyRnJvdXRlJnBhZ2U9JTJGYXBpJTJGY2hhdCUyRnJvdXRlJnBhZ2VQYXRoPXByaXZhdGUtbmV4dC1hcHAtZGlyJTJGYXBpJTJGY2hhdCUyRnJvdXRlLnRzJmFwcERpcj1EJTNBJTVDT2ZmaWNlX1dvcmslNUNQcm9qZWN0X0thYm9vbSU1Q29tbmljaGF0LWFwcCU1Q3NyYyU1Q2FwcCZhcHBQYXRocz0lMkZhcGklMkZjaGF0JTJGcm91dGUmcGFnZUV4dGVuc2lvbnM9dHN4JnBhZ2VFeHRlbnNpb25zPXRzJnBhZ2VFeHRlbnNpb25zPWpzeCZwYWdlRXh0ZW5zaW9ucz1qcyZiYXNlUGF0aD0mYXNzZXRQcmVmaXg9Jm5leHRDb25maWdPdXRwdXQ9JnByZWZlcnJlZFJlZ2lvbj0mbWlkZGxld2FyZUNvbmZpZz1lMzAlM0Qh&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!
+
+
+> Build failed because of webpack errors

@@ -2,26 +2,262 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer base {
 
-@media (prefers-color-scheme: dark) {
+  /* ─── DARK MODE (Default) ─────────────────────────────────── */
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Model Identity Colors */
+    --color-gpt: #10B981;
+    --color-claude: #F97316;
+    --color-gemini: #3B82F6;
+    --color-llama: #8B5CF6;
+
+    /* Core Palette */
+    --background: 10 10% 4%;
+    /* #0A0A0F */
+    --sidebar-bg: 240 15% 6%;
+    /* #0D0D14 */
+    --foreground: 0 0% 96%;
+    /* #F5F5F5 */
+
+    /* Amber Gold Accent */
+    --amber: 38 92% 50%;
+    /* #F59E0B */
+    --amber-hover: 32 90% 44%;
+    /* #D97706 */
+    --amber-glow: 38 92% 50%;
+
+    /* Shadcn Token Mapping */
+    --card: 240 15% 6%;
+    --card-foreground: 0 0% 96%;
+    --popover: 240 15% 8%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 38 92% 50%;
+    --primary-foreground: 10 10% 4%;
+    --secondary: 240 10% 10%;
+    --secondary-foreground: 0 0% 75%;
+    --muted: 240 10% 12%;
+    --muted-foreground: 0 0% 61%;
+    /* #9CA3AF */
+    --accent: 240 10% 12%;
+    --accent-foreground: 38 92% 50%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 38 92% 50%;
+    /* amber tinted border */
+    --input: 240 10% 12%;
+    --ring: 38 92% 50%;
+    --radius: 0.75rem;
+  }
+
+  /* ─── LIGHT MODE ──────────────────────────────────────────── */
+  .light {
+    --background: 152 40% 95%;
+    /* very light emerald green */
+    --sidebar-bg: 152 35% 91%;
+    /* slightly deeper emerald for sidebar */
+    --foreground: 10 10% 4%;
+    /* #0A0A0F */
+
+    --amber: 32 90% 44%;
+    /* #D97706 */
+    --amber-hover: 29 87% 35%;
+    /* #B45309 */
+
+    --card: 0 0% 100%;
+    --card-foreground: 10 10% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 10 10% 4%;
+    --primary: 32 90% 44%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 12% 90%;
+    --secondary-foreground: 10 10% 4%;
+    --muted: 220 12% 90%;
+    --muted-foreground: 220 9% 46%;
+    /* #6B7280 */
+    --accent: 220 12% 90%;
+    --accent-foreground: 32 90% 44%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 32 90% 44%;
+    --input: 220 12% 90%;
+    --ring: 32 90% 44%;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    border-color: hsl(var(--border) / 0.15);
+  }
+
+  html {
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }
 
+/* ─── GLASS CARD UTILITIES ────────────────────────────────────── */
+@layer components {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    border-radius: 16px;
+  }
+
+  .light .glass-card {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(217, 119, 6, 0.2);
+  }
+
+  .glass-input {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: 16px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .glass-input:focus-within {
+    border-color: rgba(245, 158, 11, 0.6);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12),
+      0 0 20px rgba(245, 158, 11, 0.08);
+  }
+
+  .light .glass-input {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(217, 119, 6, 0.25);
+  }
+
+  .light .glass-input:focus-within {
+    border-color: rgba(217, 119, 6, 0.7);
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.12),
+      0 0 20px rgba(217, 119, 6, 0.08);
+  }
+
+  /* Amber glow send button */
+  .btn-amber {
+    @apply bg-amber text-background font-mono text-sm font-semibold;
+    @apply rounded-xl px-4 py-2 transition-all duration-200;
+    @apply hover:bg-amber-hover;
+  }
+
+  .btn-amber:hover {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+  }
+
+  .light .btn-amber:hover {
+    box-shadow: 0 0 20px rgba(217, 119, 6, 0.35);
+  }
+
+  /* Active sidebar item */
+  .sidebar-item-active {
+    border-left: 3px solid hsl(var(--amber));
+    background: rgba(245, 158, 11, 0.08);
+    color: hsl(var(--foreground));
+  }
+
+  .light .sidebar-item-active {
+    background: rgba(217, 119, 6, 0.1);
+  }
+}
+
+/* ─── ANIMATIONS ──────────────────────────────────────────────── */
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+
+  /* Amber typing dots */
+  @keyframes amber-pulse {
+
+    0%,
+    80%,
+    100% {
+      transform: scale(0.8);
+      opacity: 0.4;
+    }
+
+    40% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+  }
+
+  .typing-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #F59E0B;
+    animation: amber-pulse 1.2s ease-in-out infinite;
+  }
+
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  /* Message fade-in */
+  @keyframes msg-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .msg-animate {
+    animation: msg-in 0.3s ease forwards;
+  }
+
+  /* Amber model pill flash */
+  @keyframes amber-flash {
+    0% {
+      box-shadow: 0 0 0px rgba(245, 158, 11, 0);
+    }
+
+    50% {
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+    }
+
+    100% {
+      box-shadow: 0 0 0px rgba(245, 158, 11, 0);
+    }
+  }
+
+  .amber-flash {
+    animation: amber-flash 0.5s ease;
+  }
+
+  /* Subtle constellation background pattern */
+  .constellation-bg {
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(245, 158, 11, 0.35) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 15%, rgba(245, 158, 11, 0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 60%, rgba(245, 158, 11, 0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 80%, rgba(245, 158, 11, 0.15) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 70%, rgba(245, 158, 11, 0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 35% 45%, rgba(245, 158, 11, 0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 85%, rgba(245, 158, 11, 0.15) 0%, transparent 100%);
+  }
+
+  .light .constellation-bg {
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(100, 100, 110, 0.15) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 15%, rgba(100, 100, 110, 0.12) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 60%, rgba(100, 100, 110, 0.1) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 80%, rgba(100, 100, 110, 0.08) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 70%, rgba(100, 100, 110, 0.12) 0%, transparent 100%);
   }
 }

@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PlanType {
+  FREE
+  BASIC
+  MAX
+}
+
+model User {
+  id            String        @id @default(uuid())
+  clerkId       String        @unique
+  email         String        @unique
+  createdAt     DateTime      @default(now())
+  plan          PlanType      @default(FREE)
+  monthlyTokens Int           @default(0)
+  conversations Conversation[]
+  memoryChunks  MemoryChunk[]
+}
+
+model Conversation {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  title     String    @default("New Conversation")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[]
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String       // "user" | "assistant" | "system"
+  content        String
+  modelId        String?      // which model was active when this message was sent
+  tokens         Int          @default(0)
+  createdAt      DateTime     @default(now())
+}
+
+model MemoryChunk {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  content   String
+  source    String   @default("profile") // "profile" | "conversation"
+  // vector embedding stored as JSON array until pgvector is enabled
+  embedding String?
+  createdAt DateTime @default(now())
+}
