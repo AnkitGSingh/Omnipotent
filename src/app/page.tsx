@@ -13,7 +13,7 @@ import { AVAILABLE_MODELS } from '@/components/chat/ModelSelector';
 import { FloatingEmbers } from '@/components/chat/FloatingEmbers';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
-const API_BASE = 'http://127.0.0.1:8000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
 
 type Message = {
   role: 'user' | 'assistant';
