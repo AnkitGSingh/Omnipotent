@@ -11,7 +11,11 @@ app = FastAPI(
 # Configure CORS for the Next.js frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://omnipotent-flax.vercel.app",
+        "https://omnipotent-git-main-ankitgsinghs-projects.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
