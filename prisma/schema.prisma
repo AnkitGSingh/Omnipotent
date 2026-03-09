@@ -19,6 +19,9 @@ model User {
   createdAt     DateTime      @default(now())
   plan          PlanType      @default(FREE)
   monthlyTokens Int           @default(0)
+  tokensResetAt DateTime?
+  gdprConsent   Boolean       @default(false)
+  gdprConsentAt DateTime?
   conversations Conversation[]
   memoryChunks  MemoryChunk[]
 }

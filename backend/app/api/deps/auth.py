@@ -1,72 +1,105 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt, JWTError
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 import httpx
 import logging
+import time
 from app.core.config import settings
+from app.core.database import get_db
 
 logger = logging.getLogger(__name__)
 security = HTTPBearer()
 
-# Clerk RS256 signing keys URL
-CLERK_JWKS_URL = f"https://api.clerk.dev/v1/jwks"
+# ---------------------------------------------------------------------------
+# JWKS Cache — avoids calling Clerk on every request.
+# Refreshes every 5 minutes (300 s).
+# ---------------------------------------------------------------------------
+_jwks_cache: dict = {"keys": None, "fetched_at": 0.0}
+_JWKS_TTL: float = 300.0
 
-async def get_clerk_jwks():
-    """Fetch JSON Web Key Set from Clerk to verify JWT signatures."""
-    async with httpx.AsyncClient() as client:
+# Derived from CLERK_PUBLISHABLE_KEY: pk_test_cnVsaW5nLWNyYXdkYWQtNDMuY2xlcmsuYWNjb3VudHMuZGV2JA
+# decodes (base64) to: ruling-crawdad-43.clerk.accounts.dev
+CLERK_JWKS_URL = "https://ruling-crawdad-43.clerk.accounts.dev/.well-known/jwks.json"
+
+
+async def get_clerk_jwks() -> dict:
+    """Fetch Clerk JWKS with a 5-minute TTL in-process cache."""
+    now = time.monotonic()
+    if _jwks_cache["keys"] is not None and (now - _jwks_cache["fetched_at"]) < _JWKS_TTL:
+        return {"keys": _jwks_cache["keys"]}
+
+    async with httpx.AsyncClient(timeout=5.0) as client:
         try:
             response = await client.get(
                 CLERK_JWKS_URL,
-                headers={"Authorization": f"Bearer {settings.clerk_secret_key}"}
+                headers={"Authorization": f"Bearer {settings.clerk_secret_key}"},
             )
             response.raise_for_status()
-            return response.json()
-        except Exception as e:
-            logger.error(f"Failed to fetch Clerk JWKS: {e}")
-            raise HTTPException(status_code=500, detail="Internal Auth Configuration Error")
+            data = response.json()
+            _jwks_cache["keys"] = data.get("keys", [])
+            _jwks_cache["fetched_at"] = now
+            return data
+        except Exception as exc:
+            logger.error(f"Failed to fetch Clerk JWKS: {exc}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Auth configuration error — cannot reach Clerk JWKS endpoint.",
+            )
 
-async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    """Extract and verify the Clerk JWT from the Authorization header."""
+
+async def verify_token(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+) -> str:
+    """Verify the Clerk JWT and return the user's Clerk ID (sub claim)."""
     token = credentials.credentials
     try:
-        # First, decode the unverified header to get the Key ID (kid)
         unverified_header = jwt.get_unverified_header(token)
-        kid = unverified_header.get('kid')
-        
-        # Get the JWKS from Clerk
-        jwks = await get_clerk_jwks()
-        
-        # Find the matching key
-        clerk_key = None
-        for key in jwks.get('keys', []):
-            if key.get('kid') == kid:
-                clerk_key = key
-                break
-                
-        if not clerk_key:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Public key not found")
+        kid = unverified_header.get("kid")
 
-        # Verify the token
-        payload = jwt.decode(
-            token,
-            clerk_key,
-            algorithms=["RS256"],
-            # audience=settings.clerk_publishable_key, # Can add aud verification if needed
+        jwks = await get_clerk_jwks()
+        clerk_key = next(
+            (k for k in jwks.get("keys", []) if k.get("kid") == kid), None
         )
-        
-        # Return the sub (which is the user's Clerk ID)
-        return payload.get("sub")
-        
-    except JWTError as e:
-        logger.error(f"JWT Verification failed: {e}")
+        if not clerk_key:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Public key not found for token kid.",
+            )
+
+        payload = jwt.decode(token, clerk_key, algorithms=["RS256"])
+        return payload["sub"]
+
+    except JWTError as exc:
+        logger.warning(f"JWT verification failed: {exc}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
+            detail="Invalid or expired authentication token.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-async def get_current_user(clerk_id: str = Depends(verify_token)):
-    """Dependency to inject the current authenticated user's ID into route handlers."""
-    # In a real app we would lookup the User model in the DB using this clerk_id
-    # For now, just return the ID to prove auth works
+
+async def get_or_create_db_user(
+    clerk_id: str = Depends(verify_token),
+    db: AsyncSession = Depends(get_db),
+):
+    """Resolve Clerk ID to a DB User record, auto-creating on first sign-in."""
+    # Lazy import to avoid circular dependency
+    from app.models.schemas import User
+
+    result = await db.execute(select(User).where(User.clerk_id == clerk_id))
+    user = result.scalar_one_or_none()
+    if not user:
+        user = User(clerk_id=clerk_id, plan="FREE", monthly_tokens=0)
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
+    return user
+
+
+# ---------------------------------------------------------------------------
+# Legacy alias kept for profile router (already used get_current_user)
+# ---------------------------------------------------------------------------
+async def get_current_user(clerk_id: str = Depends(verify_token)) -> str:
     return clerk_id

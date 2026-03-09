@@ -14,6 +14,11 @@ const config: Config = {
 				foreground: 'hsl(var(--foreground))',
 				border: 'hsl(var(--border) / 0.15)',
 				sidebar: 'hsl(var(--sidebar-bg))',
+				surface: 'hsl(var(--surface))',
+				'surface-elevated': 'hsl(var(--surface-elevated))',
+				'surface-muted': 'hsl(var(--surface-muted))',
+				'assistant-bubble': 'hsl(var(--assistant-bubble))',
+				'user-bubble': 'hsl(var(--user-bubble))',
 				amber: 'hsl(var(--amber))',
 				'amber-hover': 'hsl(var(--amber-hover))',
 				// Model identity
@@ -58,6 +63,15 @@ const config: Config = {
 				mono: ['var(--font-jetbrains-mono)', 'monospace'],
 				sans: ['var(--font-inter)', 'sans-serif'],
 			},
+			transitionDuration: {
+				fast: '140ms',
+				normal: '220ms',
+				hero: '420ms',
+			},
+			transitionTimingFunction: {
+				spring: 'cubic-bezier(0.16, 1, 0.3, 1)',
+				smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
+			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
@@ -66,9 +80,9 @@ const config: Config = {
 				'2xl': '1.25rem',
 			},
 			boxShadow: {
-				'amber-glow': '0 0 20px rgba(245, 158, 11, 0.4)',
-				'amber-soft': '0 0 15px rgba(245, 158, 11, 0.25)',
-				'amber-inner': 'inset 0 0 12px rgba(245, 158, 11, 0.1)',
+				'theme-glow': '0 0 20px hsl(var(--primary) / 0.35)',
+				'theme-soft': '0 0 15px hsl(var(--primary) / 0.2)',
+				'theme-inner': 'inset 0 0 12px hsl(var(--primary) / 0.14)',
 			},
 			keyframes: {
 				'amber-pulse': {

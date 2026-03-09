@@ -5,37 +5,22 @@ Handles creating, listing, and retrieving conversations and their messages.
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload
 from typing import Optional
 import uuid
 
 from app.core.database import get_db
+from app.api.deps.auth import get_or_create_db_user
 from app.models.schemas import User, Conversation, Message
 
 router = APIRouter()
 
-# --- Helper: Get or create a default test user (no auth yet) ---
-async def get_or_create_test_user(db: AsyncSession) -> User:
-    """Until Clerk auth is wired, we use a single test user."""
-    test_clerk_id = "test_user_local"
-    result = await db.execute(
-        select(User).where(User.clerk_id == test_clerk_id)
-    )
-    user = result.scalar_one_or_none()
-    
-    if not user:
-        user = User(clerk_id=test_clerk_id, current_tier="Free")
-        db.add(user)
-        await db.commit()
-        await db.refresh(user)
-    
-    return user
-
 
 @router.get("/")
-async def list_conversations(db: AsyncSession = Depends(get_db)):
-    """List all conversations for the test user, newest first."""
-    user = await get_or_create_test_user(db)
+async def list_conversations(
+    user: User = Depends(get_or_create_db_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """List all conversations for the authenticated user, newest first."""
     
     result = await db.execute(
         select(Conversation)
@@ -43,7 +28,7 @@ async def list_conversations(db: AsyncSession = Depends(get_db)):
         .order_by(Conversation.created_at.desc())
     )
     conversations = result.scalars().all()
-    
+
     return {
         "conversations": [
             {
@@ -59,10 +44,10 @@ async def list_conversations(db: AsyncSession = Depends(get_db)):
 @router.post("/")
 async def create_conversation(
     title: Optional[str] = None,
+    user: User = Depends(get_or_create_db_user),
     db: AsyncSession = Depends(get_db),
 ):
     """Create a new conversation and return its ID."""
-    user = await get_or_create_test_user(db)
     
     conversation = Conversation(
         user_id=user.id,
@@ -82,6 +67,7 @@ async def create_conversation(
 @router.get("/{conversation_id}/messages")
 async def get_messages(
     conversation_id: str,
+    user: User = Depends(get_or_create_db_user),
     db: AsyncSession = Depends(get_db),
 ):
     """Load all messages for a given conversation, ordered chronologically."""
@@ -97,7 +83,9 @@ async def get_messages(
     conversation = result.scalar_one_or_none()
     if not conversation:
         raise HTTPException(status_code=404, detail="Conversation not found")
-    
+    if conversation.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Access denied.")
+
     # Fetch messages
     result = await db.execute(
         select(Message)
@@ -126,6 +114,7 @@ async def get_messages(
 async def update_conversation_title(
     conversation_id: str,
     title: str,
+    user: User = Depends(get_or_create_db_user),
     db: AsyncSession = Depends(get_db),
 ):
     """Update the title of a conversation."""
@@ -140,7 +129,9 @@ async def update_conversation_title(
     conversation = result.scalar_one_or_none()
     if not conversation:
         raise HTTPException(status_code=404, detail="Conversation not found")
-    
+    if conversation.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Access denied.")
+
     conversation.title = title
     await db.commit()
     
@@ -150,6 +141,7 @@ async def update_conversation_title(
 @router.delete("/{conversation_id}")
 async def delete_conversation(
     conversation_id: str,
+    user: User = Depends(get_or_create_db_user),
     db: AsyncSession = Depends(get_db),
 ):
     """Delete a conversation and all its messages."""
@@ -164,7 +156,9 @@ async def delete_conversation(
     conversation = result.scalar_one_or_none()
     if not conversation:
         raise HTTPException(status_code=404, detail="Conversation not found")
-    
+    if conversation.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Access denied.")
+
     await db.delete(conversation)
     await db.commit()
     

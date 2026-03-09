@@ -4,7 +4,7 @@
 
 @layer base {
 
-  /* ─── DARK MODE (Default) ─────────────────────────────────── */
+  /* Oxblood Editorial - Dark Mode (default) */
   :root {
     /* Model Identity Colors */
     --color-gpt: #10B981;
@@ -12,76 +12,99 @@
     --color-gemini: #3B82F6;
     --color-llama: #8B5CF6;
 
-    /* Core Palette */
-    --background: 10 10% 4%;
-    /* #0A0A0F */
-    --sidebar-bg: 240 15% 6%;
-    /* #0D0D14 */
-    --foreground: 0 0% 96%;
-    /* #F5F5F5 */
+    /* Brand surfaces */
+    --background: 346 47% 6%;
+    --sidebar-bg: 344 39% 8%;
+    --foreground: 24 36% 94%;
+    --surface: 347 31% 10%;
+    --surface-elevated: 347 27% 14%;
+    --surface-muted: 347 21% 17%;
+    --assistant-bubble: 347 30% 12%;
+    --user-bubble: 344 52% 20%;
 
-    /* Amber Gold Accent */
-    --amber: 38 92% 50%;
-    /* #F59E0B */
-    --amber-hover: 32 90% 44%;
-    /* #D97706 */
-    --amber-glow: 38 92% 50%;
-
-    /* Shadcn Token Mapping */
-    --card: 240 15% 6%;
-    --card-foreground: 0 0% 96%;
-    --popover: 240 15% 8%;
-    --popover-foreground: 0 0% 96%;
-    --primary: 38 92% 50%;
-    --primary-foreground: 10 10% 4%;
-    --secondary: 240 10% 10%;
-    --secondary-foreground: 0 0% 75%;
-    --muted: 240 10% 12%;
-    --muted-foreground: 0 0% 61%;
-    /* #9CA3AF */
-    --accent: 240 10% 12%;
-    --accent-foreground: 38 92% 50%;
+    /* Core semantic tokens */
+    --card: 347 31% 10%;
+    --card-foreground: 24 36% 94%;
+    --popover: 347 27% 14%;
+    --popover-foreground: 24 36% 94%;
+    --primary: 23 52% 53%;
+    --primary-foreground: 24 55% 98%;
+    --secondary: 347 21% 17%;
+    --secondary-foreground: 24 28% 84%;
+    --muted: 347 18% 20%;
+    --muted-foreground: 24 18% 72%;
+    --accent: 36 58% 60%;
+    --accent-foreground: 346 47% 9%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 38 92% 50%;
-    /* amber tinted border */
-    --input: 240 10% 12%;
-    --ring: 38 92% 50%;
+    --border: 347 39% 30%;
+    --input: 347 24% 15%;
+    --ring: 23 52% 53%;
+
+    /* Compatibility aliases */
+    --amber: 23 52% 53%;
+    --amber-hover: 36 58% 60%;
+
+    /* RGB utilities for gradients and glows */
+    --primary-rgb: 199 121 74;
+    --accent-rgb: 215 163 93;
     --radius: 0.75rem;
+
+    /* Motion timing system */
+    --duration-fast: 140ms;
+    --duration-normal: 220ms;
+    --duration-hero: 420ms;
+    --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Text opacity ramps */
+    --text-1: hsl(var(--foreground));
+    --text-2: hsl(var(--foreground) / 0.62);
+    --text-3: hsl(var(--foreground) / 0.38);
+
+    /* Surface ramp aliases */
+    --surface-1: var(--surface);
+    --surface-2: var(--surface-elevated);
+    --surface-3: var(--surface-muted);
+
+    /* Stroke scale */
+    --stroke-strong: hsl(var(--border) / 0.65);
+    --stroke-subtle: hsl(var(--border) / 0.22);
   }
 
-  /* ─── LIGHT MODE ──────────────────────────────────────────── */
+  /* Oxblood Editorial - Light Mode */
   .light {
-    --background: 152 40% 95%;
-    /* very light emerald green */
-    --sidebar-bg: 152 35% 91%;
-    /* slightly deeper emerald for sidebar */
-    --foreground: 10 10% 4%;
-    /* #0A0A0F */
+    --background: 24 36% 94%;
+    --sidebar-bg: 24 34% 89%;
+    --foreground: 346 34% 13%;
+    --surface: 22 43% 97%;
+    --surface-elevated: 18 46% 93%;
+    --surface-muted: 18 34% 89%;
+    --assistant-bubble: 18 46% 93%;
+    --user-bubble: 345 43% 86%;
 
-    --amber: 32 90% 44%;
-    /* #D97706 */
-    --amber-hover: 29 87% 35%;
-    /* #B45309 */
-
-    --card: 0 0% 100%;
-    --card-foreground: 10 10% 4%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 10 10% 4%;
-    --primary: 32 90% 44%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 12% 90%;
-    --secondary-foreground: 10 10% 4%;
-    --muted: 220 12% 90%;
-    --muted-foreground: 220 9% 46%;
-    /* #6B7280 */
-    --accent: 220 12% 90%;
-    --accent-foreground: 32 90% 44%;
+    --card: 22 43% 97%;
+    --card-foreground: 346 34% 13%;
+    --popover: 22 43% 97%;
+    --popover-foreground: 346 34% 13%;
+    --primary: 347 51% 36%;
+    --primary-foreground: 24 60% 97%;
+    --secondary: 18 34% 89%;
+    --secondary-foreground: 346 34% 18%;
+    --muted: 18 30% 86%;
+    --muted-foreground: 346 16% 38%;
+    --accent: 23 44% 45%;
+    --accent-foreground: 24 60% 97%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 32 90% 44%;
-    --input: 220 12% 90%;
-    --ring: 32 90% 44%;
+    --border: 347 28% 74%;
+    --input: 18 34% 90%;
+    --ring: 347 51% 36%;
+
+    --amber: 347 51% 36%;
+    --amber-hover: 23 44% 45%;
+    --primary-rgb: 139 45 61;
+    --accent-rgb: 161 93 63;
   }
 }
 
@@ -103,76 +126,134 @@
 /* ─── GLASS CARD UTILITIES ────────────────────────────────────── */
 @layer components {
   .glass-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: hsl(var(--surface) / 0.78);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(245, 158, 11, 0.15);
+    border: 1px solid hsl(var(--border) / 0.42);
     border-radius: 16px;
+    box-shadow: 0 10px 28px hsl(var(--background) / 0.55);
   }
 
   .light .glass-card {
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid rgba(217, 119, 6, 0.2);
+    background: hsl(var(--surface) / 0.92);
+    border: 1px solid hsl(var(--border) / 0.65);
+    box-shadow: 0 10px 24px hsl(var(--primary) / 0.08);
   }
 
   .glass-input {
-    background: rgba(255, 255, 255, 0.04);
+    background: hsl(var(--surface-elevated) / 0.78);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(245, 158, 11, 0.2);
+    border: 1px solid hsl(var(--border) / 0.48);
     border-radius: 16px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color var(--duration-normal) var(--ease-smooth),
+                box-shadow var(--duration-normal) var(--ease-smooth);
   }
 
   .glass-input:focus-within {
-    border-color: rgba(245, 158, 11, 0.6);
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12),
-      0 0 20px rgba(245, 158, 11, 0.08);
+    border-color: hsl(var(--primary) / 0.6);
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.12),
+                0 0 28px hsl(var(--primary) / 0.18),
+                inset 0 1px 0 hsl(var(--foreground) / 0.04);
   }
 
   .light .glass-input {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: rgba(217, 119, 6, 0.25);
+    background: hsl(var(--surface) / 0.96);
+    border-color: hsl(var(--border) / 0.7);
   }
 
   .light .glass-input:focus-within {
-    border-color: rgba(217, 119, 6, 0.7);
-    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.12),
-      0 0 20px rgba(217, 119, 6, 0.08);
+    border-color: hsl(var(--primary) / 0.58);
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.12),
+      0 0 20px hsl(var(--primary) / 0.16);
   }
 
-  /* Amber glow send button */
-  .btn-amber {
-    @apply bg-amber text-background font-mono text-sm font-semibold;
-    @apply rounded-xl px-4 py-2 transition-all duration-200;
-    @apply hover:bg-amber-hover;
+  /* Send / primary button */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground font-mono text-sm font-semibold;
+    @apply rounded-xl px-4 py-2;
+    transition: transform var(--duration-fast) var(--ease-spring),
+                box-shadow var(--duration-normal) var(--ease-smooth);
   }
 
-  .btn-amber:hover {
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 18px hsl(var(--primary) / 0.3),
+                0 0 0 1px hsl(var(--primary) / 0.2);
   }
 
-  .light .btn-amber:hover {
-    box-shadow: 0 0 20px rgba(217, 119, 6, 0.35);
+  .btn-primary:active {
+    transform: translateY(0) scale(0.96);
+    box-shadow: none;
+  }
+
+  .light .btn-primary:hover {
+    box-shadow: 0 4px 14px hsl(var(--primary) / 0.24),
+                0 0 0 1px hsl(var(--primary) / 0.2);
+  }
+
+  /* Card hover lift */
+  .card-lift {
+    transition: transform var(--duration-normal) var(--ease-smooth),
+                box-shadow var(--duration-normal) var(--ease-smooth),
+                border-color var(--duration-normal) var(--ease-smooth);
+  }
+
+  .card-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px hsl(var(--background) / 0.45),
+                0 0 0 1px hsl(var(--primary) / 0.18);
+  }
+
+  /* CTA shimmer sweep on hover */
+  .cta-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary-foreground) / 0.18), transparent);
+    transform: skewX(-18deg);
+    transition: left 0s;
+  }
+
+  .cta-shimmer:hover::after {
+    left: 160%;
+    transition: left 0.55s var(--ease-smooth);
   }
 
   /* Active sidebar item */
   .sidebar-item-active {
-    border-left: 3px solid hsl(var(--amber));
-    background: rgba(245, 158, 11, 0.08);
-    color: hsl(var(--foreground));
+    border-left: 2px solid hsl(var(--primary));
+    background: hsl(var(--primary) / 0.12);
+    color: hsl(var(--primary));
+    box-shadow: inset 0 0 12px hsl(var(--primary) / 0.06);
   }
 
   .light .sidebar-item-active {
-    background: rgba(217, 119, 6, 0.1);
+    background: hsl(var(--primary) / 0.1);
+    box-shadow: inset 0 0 10px hsl(var(--primary) / 0.05);
+  }
+
+  /* Standard focus ring */
+  .focus-ring:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px hsl(var(--background)),
+                0 0 0 4px hsl(var(--primary) / 0.5);
   }
 }
 
 /* ─── ANIMATIONS ──────────────────────────────────────────────── */
 @layer utilities {
 
-  /* Amber typing dots */
-  @keyframes amber-pulse {
+  /* Accent typing dots */
+  @keyframes accent-pulse {
 
     0%,
     80%,
@@ -192,8 +273,8 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: #F59E0B;
-    animation: amber-pulse 1.2s ease-in-out infinite;
+    background-color: hsl(var(--primary));
+    animation: accent-pulse 1.2s ease-in-out infinite;
   }
 
   .typing-dot:nth-child(2) {
@@ -221,43 +302,43 @@
     animation: msg-in 0.3s ease forwards;
   }
 
-  /* Amber model pill flash */
-  @keyframes amber-flash {
+  /* Model pill flash */
+  @keyframes theme-flash {
     0% {
-      box-shadow: 0 0 0px rgba(245, 158, 11, 0);
+      box-shadow: 0 0 0px hsl(var(--primary) / 0);
     }
 
     50% {
-      box-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+      box-shadow: 0 0 16px hsl(var(--primary) / 0.32);
     }
 
     100% {
-      box-shadow: 0 0 0px rgba(245, 158, 11, 0);
+      box-shadow: 0 0 0px hsl(var(--primary) / 0);
     }
   }
 
-  .amber-flash {
-    animation: amber-flash 0.5s ease;
+  .theme-flash {
+    animation: theme-flash 0.5s ease;
   }
 
   /* Subtle constellation background pattern */
   .constellation-bg {
     background-image:
-      radial-gradient(1px 1px at 20% 30%, rgba(245, 158, 11, 0.35) 0%, transparent 100%),
-      radial-gradient(1px 1px at 75% 15%, rgba(245, 158, 11, 0.25) 0%, transparent 100%),
-      radial-gradient(1px 1px at 50% 60%, rgba(245, 158, 11, 0.2) 0%, transparent 100%),
-      radial-gradient(1px 1px at 10% 80%, rgba(245, 158, 11, 0.15) 0%, transparent 100%),
-      radial-gradient(1px 1px at 90% 70%, rgba(245, 158, 11, 0.3) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 35% 45%, rgba(245, 158, 11, 0.2) 0%, transparent 100%),
-      radial-gradient(1px 1px at 65% 85%, rgba(245, 158, 11, 0.15) 0%, transparent 100%);
+      radial-gradient(1px 1px at 20% 30%, hsl(var(--foreground) / 0.14) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 15%, hsl(var(--foreground) / 0.1) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 60%, hsl(var(--primary) / 0.1) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 80%, hsl(var(--foreground) / 0.05) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 70%, hsl(var(--accent) / 0.12) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 35% 45%, hsl(var(--primary) / 0.08) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 85%, hsl(var(--foreground) / 0.05) 0%, transparent 100%);
   }
 
   .light .constellation-bg {
     background-image:
-      radial-gradient(1px 1px at 20% 30%, rgba(100, 100, 110, 0.15) 0%, transparent 100%),
-      radial-gradient(1px 1px at 75% 15%, rgba(100, 100, 110, 0.12) 0%, transparent 100%),
-      radial-gradient(1px 1px at 50% 60%, rgba(100, 100, 110, 0.1) 0%, transparent 100%),
-      radial-gradient(1px 1px at 10% 80%, rgba(100, 100, 110, 0.08) 0%, transparent 100%),
-      radial-gradient(1px 1px at 90% 70%, rgba(100, 100, 110, 0.12) 0%, transparent 100%);
+      radial-gradient(1px 1px at 20% 30%, hsl(var(--foreground) / 0.08) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 15%, hsl(var(--foreground) / 0.06) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 60%, hsl(var(--primary) / 0.08) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 80%, hsl(var(--foreground) / 0.04) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 70%, hsl(var(--accent) / 0.08) 0%, transparent 100%);
   }
 }

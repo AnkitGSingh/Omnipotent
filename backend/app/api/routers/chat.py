@@ -1,107 +1,141 @@
 """
-Chat streaming endpoint with database persistence.
-Saves both user and assistant messages to the conversations table.
+Chat streaming endpoint.
+- Accepts full conversation history as a JSON body (messages array).
+- Persists user + assistant messages to PostgreSQL.
+- Streams the AI response via SSE (text/event-stream).
 """
+from __future__ import annotations
+
+import json
+import logging
+import uuid
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
-from sqlalchemy.ext.asyncio import AsyncSession
+from pydantic import BaseModel
 from sqlalchemy import select
-import json
-import uuid
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.deps.auth import get_or_create_db_user
 from app.core.database import get_db
 from app.models.schemas import Conversation, Message, User
-from app.services.langchain_bedrock import stream_bedrock_response
+from app.services.langchain_bedrock import stream_response
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-async def get_or_create_test_user(db: AsyncSession) -> User:
-    """Until Clerk auth is wired, we use a single test user."""
-    test_clerk_id = "test_user_local"
-    result = await db.execute(
-        select(User).where(User.clerk_id == test_clerk_id)
-    )
-    user = result.scalar_one_or_none()
-    if not user:
-        user = User(clerk_id=test_clerk_id, current_tier="Free")
-        db.add(user)
-        await db.commit()
-        await db.refresh(user)
-    return user
+# ---------------------------------------------------------------------------
+# Request schemas
+# ---------------------------------------------------------------------------
 
+class ChatMessage(BaseModel):
+    role: str       # "user" | "assistant"
+    content: str
+
+
+class ChatRequest(BaseModel):
+    messages: list[ChatMessage]  # full history; last entry must be the new user message
+    model_id: str = "us.anthropic.claude-3-5-sonnet-20241022-v2:0"
+    conversation_id: Optional[str] = None
+
+
+
+
+# ---------------------------------------------------------------------------
+# Stream endpoint
+# ---------------------------------------------------------------------------
 
 @router.post("/stream")
 async def chat_stream(
-    message: str,
-    conversation_id: str = None,
-    model_id: str = "anthropic.claude-3-haiku-20240307-v1:0",
+    request: ChatRequest,
+    user: User = Depends(get_or_create_db_user),
     db: AsyncSession = Depends(get_db),
 ):
     """
-    Accepts a user message, streams the AI response via SSE,
-    and persists both messages to the database.
+    Accepts full conversation history, streams the AI response via SSE,
+    and persists both user and assistant messages to the database.
     """
-    user = await get_or_create_test_user(db)
+    if not request.messages:
+        raise HTTPException(status_code=400, detail="messages array cannot be empty.")
 
-    # Create or fetch the conversation
-    if conversation_id:
+    new_user_message = request.messages[-1]
+    if new_user_message.role != "user":
+        raise HTTPException(status_code=400, detail="Last message in array must have role 'user'.")
+
+    # ------------------------------------------------------------------
+    # Resolve or create conversation
+    # ------------------------------------------------------------------
+    if request.conversation_id:
         try:
-            conv_uuid = uuid.UUID(conversation_id)
+            conv_uuid = uuid.UUID(request.conversation_id)
         except ValueError:
-            raise HTTPException(status_code=400, detail="Invalid conversation ID")
+            raise HTTPException(status_code=400, detail="Invalid conversation_id format.")
         result = await db.execute(
             select(Conversation).where(Conversation.id == conv_uuid)
         )
         conversation = result.scalar_one_or_none()
         if not conversation:
-            raise HTTPException(status_code=404, detail="Conversation not found")
+            raise HTTPException(status_code=404, detail="Conversation not found.")
     else:
-        # Auto-create a new conversation titled with the first few words
-        title = message[:50] + ("..." if len(message) > 50 else "")
+        raw = new_user_message.content[:60]
+        title = raw + ("..." if len(new_user_message.content) > 60 else "")
         conversation = Conversation(user_id=user.id, title=title)
         db.add(conversation)
         await db.commit()
         await db.refresh(conversation)
 
-    # Save the user message to DB
-    user_msg = Message(
+    # Persist the user message
+    db.add(Message(
         conversation_id=conversation.id,
         role="user",
-        content=message,
+        content=new_user_message.content,
         model_used=None,
-    )
-    db.add(user_msg)
+    ))
     await db.commit()
 
-    # We need to collect the full AI response for DB persistence
-    # but also stream it to the client in real-time
     conv_id_str = str(conversation.id)
+    history = [{"role": m.role, "content": m.content} for m in request.messages]
 
+    # ------------------------------------------------------------------
+    # SSE generator
+    # ------------------------------------------------------------------
     async def sse_generator():
-        accumulated_response = ""
+        accumulated = ""
         try:
-            async for chunk in stream_bedrock_response(model_id, message):
-                accumulated_response += chunk
-                data = json.dumps({"text": chunk})
-                yield f"data: {data}\n\n"
-
+            # Send conversation_id first so the frontend can update the sidebar
+            # immediately without waiting for the full response.
             yield f"data: {json.dumps({'conversation_id': conv_id_str})}\n\n"
-            yield "data: [DONE]\n\n"
-        except Exception as e:
-            error_data = json.dumps({"error": str(e)})
-            yield f"data: {error_data}\n\n"
-            accumulated_response = f"[Error: {str(e)}]"
-        finally:
-            # Persist the assistant's full response after streaming is done
-            async with db.begin():
-                assistant_msg = Message(
-                    conversation_id=conversation.id,
-                    role="assistant",
-                    content=accumulated_response,
-                    model_used=model_id,
-                )
-                db.add(assistant_msg)
 
-    return StreamingResponse(sse_generator(), media_type="text/event-stream")
+            async for chunk in stream_response(request.model_id, history):
+                accumulated += chunk
+                yield f"data: {json.dumps({'text': chunk})}\n\n"
+
+            yield "data: [DONE]\n\n"
+
+        except Exception as exc:
+            logger.error(f"Stream error [{request.model_id}]: {exc}")
+            yield f"data: {json.dumps({'error': 'AI stream error. Please try again.'})}\n\n"
+            accumulated = accumulated or f"[Stream error: {exc}]"
+
+        finally:
+            if accumulated:
+                try:
+                    db.add(Message(
+                        conversation_id=conversation.id,
+                        role="assistant",
+                        content=accumulated,
+                        model_used=request.model_id,
+                    ))
+                    await db.commit()
+                except Exception as db_exc:
+                    logger.error(f"Failed to persist assistant message: {db_exc}")
+
+    return StreamingResponse(
+        sse_generator(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
 

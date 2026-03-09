@@ -30,15 +30,15 @@ export function ThemeToggle({ className, showLabel = false }: ThemeToggleProps) 
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className={cn(
                 "flex items-center gap-2 p-2 rounded-lg text-sm transition-colors group",
-                "text-foreground/70 hover:bg-amber/10 hover:text-amber",
+                "text-foreground/70 hover:bg-primary/10 hover:text-primary",
                 className
             )}
             title="Toggle theme"
         >
             {theme === "dark" ? (
-                <Sun className="w-4 h-4 group-hover:drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
+                <Sun className="w-4 h-4 group-hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.35)]" />
             ) : (
-                <Moon className="w-4 h-4 group-hover:drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
+                <Moon className="w-4 h-4 group-hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.35)]" />
             )}
             {showLabel && (
                 <span className="font-mono text-xs hidden md:inline">

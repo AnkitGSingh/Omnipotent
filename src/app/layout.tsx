@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import { ClerkProvider } from '@clerk/nextjs';
-import { FloatingEmbers } from '@/components/chat/FloatingEmbers';
 import './globals.css';
 
 const inter = Inter({
@@ -31,12 +30,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${playfair.variable} ${jetbrainsMono.variable} font-sans antialiased bg-background text-foreground selection:bg-amber/20 selection:text-foreground`}
+        className={`${inter.variable} ${playfair.variable} ${jetbrainsMono.variable} font-sans antialiased bg-background text-foreground selection:bg-primary/25 selection:text-foreground`}
       >
         <ClerkProvider
           appearance={{
             variables: {
-              colorPrimary: 'hsl(var(--amber))',
+              colorPrimary: 'hsl(var(--primary))',
               colorText: 'hsl(var(--foreground))',
               colorBackground: 'hsl(var(--sidebar-bg))',
               colorInputBackground: 'transparent',
@@ -45,21 +44,21 @@ export default function RootLayout({
               borderRadius: '0.75rem',
             },
             elements: {
-              card: 'border border-amber/15 bg-background/60 backdrop-blur-xl shadow-2xl',
-              headerTitle: 'font-serif text-amber text-2xl',
+              card: 'border border-primary/15 bg-background/60 backdrop-blur-xl shadow-2xl',
+              headerTitle: 'font-serif text-primary text-2xl',
               headerSubtitle: 'font-mono text-xs text-foreground/50',
-              socialButtonsBlockButton: 'border-amber/20 bg-foreground/5 hover:bg-amber/10 hover:border-amber/40 transition-all font-mono text-sm text-foreground/80',
+              socialButtonsBlockButton: 'border-primary/20 bg-foreground/5 hover:bg-primary/10 hover:border-primary/40 transition-all font-mono text-sm text-foreground/80',
               socialButtonsBlockButtonText: 'font-mono text-sm font-medium',
-              dividerLine: 'bg-amber/20',
+              dividerLine: 'bg-primary/20',
               dividerText: 'font-mono text-xs text-foreground/40',
               formFieldLabel: 'font-mono text-xs text-foreground/70',
-              formFieldInput: 'font-mono text-sm border-amber/20 focus:border-amber/60 focus:ring-amber/20 transition-all bg-transparent',
-              formButtonPrimary: 'font-mono font-semibold bg-amber hover:bg-amber-hover text-background transition-all hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]',
+              formFieldInput: 'font-mono text-sm border-primary/20 focus:border-primary/60 focus:ring-primary/20 transition-all bg-transparent',
+              formButtonPrimary: 'font-mono font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-all hover:shadow-[0_0_20px_hsl(var(--primary)/0.28)]',
               footerActionText: 'font-mono text-xs text-foreground/50',
-              footerActionLink: 'font-mono text-xs text-amber hover:text-amber-hover',
-              identityPreview: 'border-amber/20 bg-foreground/5',
+              footerActionLink: 'font-mono text-xs text-primary hover:text-primary/80',
+              identityPreview: 'border-primary/20 bg-foreground/5',
               identityPreviewText: 'font-mono text-sm',
-              identityPreviewEditButtonIcon: 'text-amber',
+              identityPreviewEditButtonIcon: 'text-primary',
               userPreviewMainIdentifier: 'text-foreground font-semibold text-sm',
               userPreviewSecondaryIdentifier: 'text-foreground/70',
               userButtonPopoverActionButtonText: 'text-foreground text-sm',
@@ -73,10 +72,6 @@ export default function RootLayout({
             enableSystem={false}
             storageKey="omnipotent-theme"
           >
-            {/* Global ambient embers — visible on every page */}
-            <div className="fixed inset-0 pointer-events-none z-0" aria-hidden>
-              <FloatingEmbers count={14} />
-            </div>
             <div className="relative z-10">
               {children}
             </div>

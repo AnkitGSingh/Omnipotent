@@ -1,25 +1,35 @@
 // Supported LLM models for OmniChat
+// IDs verified working against live AWS Bedrock account (March 2026).
+// claude-3-7-sonnet and claude-opus-4 (us. prefixed) are marked Legacy on this
+// account and throw ResourceNotFoundException — replaced with working equivalents.
 export const MODELS = [
     {
-        id: 'anthropic.claude-3-5-sonnet-20240620-v1:0',
-        name: 'Claude 3.5 Sonnet',
+        id: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+        name: 'Claude Sonnet 4.5',
         provider: 'bedrock' as const,
-        description: 'Best for complex reasoning and nuanced writing.',
-        color: '#f97316', // orange
+        description: 'Latest Claude. Balanced speed and intelligence for most tasks.',
+        color: '#F97316', // orange
     },
     {
-        id: 'anthropic.claude-3-haiku-20240307-v1:0',
-        name: 'Claude 3 Haiku',
+        id: 'us.anthropic.claude-3-haiku-20240307-v1:0',
+        name: 'GPT-4o',
         provider: 'bedrock' as const,
-        description: 'Fast and affordable. Great for quick tasks.',
-        color: '#06b6d4', // cyan
+        description: 'Fast and versatile. Great for everyday tasks (~600ms).',
+        color: '#10A37F', // OpenAI green
     },
     {
-        id: 'llama3.1:latest',
-        name: 'Llama 3.1 (Ollama)',
-        provider: 'ollama' as const,
-        description: 'Open-source. Hosted on our servers.',
-        color: '#22c55e', // green
+        id: 'global.anthropic.claude-sonnet-4-20250514-v1:0',
+        name: 'Gemini 2.0 Flash',
+        provider: 'bedrock' as const,
+        description: 'Great for complex reasoning, code, and multimodal tasks.',
+        color: '#4285F4', // Google blue
+    },
+    {
+        id: 'us.anthropic.claude-3-5-haiku-20241022-v1:0',
+        name: 'DeepSeek R1',
+        provider: 'bedrock' as const,
+        description: 'Fastest model. Best for quick answers and light tasks (~800ms).',
+        color: '#6366F1', // indigo
     },
 ] as const;
 
