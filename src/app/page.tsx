@@ -74,6 +74,13 @@ export default function Home() {
   useEffect(() => {
     if (!isLoaded || !isSignedIn) return;
     refreshConversations();
+
+    // Check URL for existing conversation ID on mount
+    const searchParams = new URLSearchParams(window.location.search);
+    const chatId = searchParams.get('c');
+    if (chatId) {
+      loadConversation(chatId);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, isSignedIn]);
 
@@ -85,6 +92,7 @@ export default function Home() {
       });
       const data = await res.json();
       setConversationId(id);
+      window.history.replaceState(null, '', `?c=${id}`); // Sync URL
       setMessages(
         (data.messages || []).map((m: { role: string; content: string; model_used?: string | null }) => ({
           role: m.role as 'user' | 'assistant',
@@ -100,6 +108,7 @@ export default function Home() {
   const handleNewChat = () => {
     setMessages([]);
     setConversationId(null);
+    window.history.replaceState(null, '', window.location.pathname); // Clear URL
   };
 
   const handleModelIconMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -193,6 +202,7 @@ export default function Home() {
             if (data.error) { console.error("Backend error:", data.error); continue; }
             if (data.conversation_id) {
               setConversationId(data.conversation_id);
+              window.history.replaceState(null, '', `?c=${data.conversation_id}`); // Sync newly created ID
               refreshConversations();
             }
             if (data.text) {
