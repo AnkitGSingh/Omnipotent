@@ -1,6 +1,6 @@
-# Omnichat App
+# Omnipotent App
 
-🚀 **Live Demo:** [Deploy on Vercel](https://your-vercel-deployment-link.vercel.app/)
+**Live Demo:** [Chat with Omnipotent](https://omnipotent-flax.vercel.app/)
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 ## Getting Started
